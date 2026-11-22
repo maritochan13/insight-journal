@@ -77,7 +77,18 @@ function renderPracticeHistory(){document.getElementById("practiceHistory").inne
 document.getElementById("jbody").addEventListener("input",e=>{let n=e.target.value.trim().split(/\s+/).filter(Boolean).length;document.getElementById("wordcount").textContent=n+" kata"});
 function displayTimer(){let m=Math.floor(left/60),s=left%60;document.getElementById("timer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
 function resetTimer(){clearInterval(interval);interval=null;left=Number(document.getElementById("duration").value);displayTimer();document.getElementById("timerBtn").textContent="Mulai latihan"}
-function toggleTimer(){if(interval){clearInterval(interval);interval=null;document.getElementById("timerBtn").textContent="Lanjutkan";return}document.getElementById("timerBtn").textContent="Jeda";interval=setInterval(()=>{left--;displayTimer();if(left<=0){clearInterval(interval);interval=null;document.getElementById("timerBtn").textContent="Selesai";document.getElementById("speechToast").textContent="Waktu selesai. Beri dirimu apresiasi karena sudah berlatih.";},1000)}
+function toggleTimer(){
+  if(interval){clearInterval(interval);interval=null;document.getElementById("timerBtn").textContent="Lanjutkan";return;}
+  document.getElementById("timerBtn").textContent="Jeda";
+  interval=setInterval(()=>{
+    left--;displayTimer();
+    if(left<=0){
+      clearInterval(interval);interval=null;
+      document.getElementById("timerBtn").textContent="Selesai";
+      document.getElementById("speechToast").textContent="Waktu selesai. Beri dirimu apresiasi karena sudah berlatih.";
+    }
+  },1000);
+}
 function finishPractice(){let checks=[...document.querySelectorAll(".speaking-check")],n=checks.filter(x=>x.checked).length,score=Math.round(n/checks.length*100),reflection=document.getElementById("practiceReflection").value.trim();practiceHistory.unshift({mode:modes[currentMode].title,score,topic:document.getElementById("speechPrompt").textContent,reflection,date:new Date().toLocaleString("id-ID")});localStorage.setItem("ijPracticeHistory",JSON.stringify(practiceHistory));practices=practiceHistory.length;localStorage.setItem("ijPractices",practices);document.getElementById("speechToast").textContent="Hasil latihan tersimpan. Skor evaluasi: "+score+"%.";renderPracticeHistory();stats()}
 document.getElementById("duration").addEventListener("change",resetTimer);document.querySelectorAll(".habit").forEach(x=>x.addEventListener("change",stats));document.querySelectorAll(".speaking-check").forEach(x=>x.addEventListener("change",updateScore));renderEntries();renderPracticeHistory();stats();displayTimer();setMode("speech");
 </script></body></html>
